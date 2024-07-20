@@ -1,14 +1,14 @@
-name: Deploy CI
+name: Deploy to Vercel
 
 on:
   push:
     branches:
-      - dev  # dev 브랜치에 푸시될 때 실행
-      - main # main 브랜치에 푸시될 때 실행
+      - main
+      - dev
   pull_request:
     branches:
-      - dev  # dev 브랜치로의 PR 생성 및 업데이트 시 실행
-      - main # main 브랜치로의 PR 생성 및 업데이트 시 실행
+      - main
+      - dev
 
 jobs:
   deploy:
@@ -18,11 +18,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-
       - name: Install dependencies
         run: npm install
 
@@ -31,7 +26,6 @@ jobs:
 
       - name: Deploy to Vercel
         env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel --prod --token=$VERCEL_TOKEN --project-id=$VERCEL_PROJECT_ID --confirm
